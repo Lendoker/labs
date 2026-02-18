@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     port: parseInt(process.env.PORT || '10000', 10),
     host: true,
+    allowedHosts: ['labs-82yz.onrender.com', '.onrender.com'],
   },
   build: {
     outDir: '../dist',
