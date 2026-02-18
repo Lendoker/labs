@@ -5,7 +5,8 @@ export default defineConfig({
   root: 'src',
   publicDir: '../public',
   server: {
-    port: 10000,
+    port: parseInt(process.env.PORT || '10000', 10),
+    host: true,
   },
   build: {
     outDir: '../dist',

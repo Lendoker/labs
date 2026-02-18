@@ -113,6 +113,12 @@ npm run build
 
 Готові файли — у папці `dist/`.
 
+## Деплой на Render.com
+
+- **Build:** `npm install && npm run build`
+- **Start:** `npm start` (сервер слухає `PORT` і прив’язаний до `0.0.0.0`)
+- У корені проєкту є `render.yaml` для автоматичного налаштування.
+
 ## Технології
 
 - Node.js, npm
