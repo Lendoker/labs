@@ -1,0 +1,9 @@
+# Render.com – Web Service
+# Build: npm install && npm run build
+# Start: npm start (serves dist/ on PORT, host 0.0.0.0)
+services:
+  - type: web
+    name: logic-labs
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
