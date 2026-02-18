@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+/* Animated gradient background */
+@keyframes mesh-gradient {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  33% { transform: translate(30px, -30px) scale(1.1); opacity: 0.4; }
+  66% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.6; }
+}
+
+.animate-mesh-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.animate-mesh-bg::before,
+.animate-mesh-bg::after {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: mesh-gradient 15s ease-in-out infinite;
+}
+
+.animate-mesh-bg::before {
+  top: -20%;
+  right: -10%;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1));
+}
+
+.animate-mesh-bg::after {
+  bottom: -20%;
+  left: -10%;
+  background: linear-gradient(315deg, rgba(245, 158, 11, 0.12), rgba(59, 130, 246, 0.1));
+  animation-delay: -7s;
+}
+
+.dark .animate-mesh-bg::before {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(16, 185, 129, 0.08));
+}
+
+.dark .animate-mesh-bg::after {
+  background: linear-gradient(315deg, rgba(245, 158, 11, 0.08), rgba(59, 130, 246, 0.08));
+}
+
+/* Stagger delays for children */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }
+.stagger-7 { animation-delay: 0.35s; }
+.stagger-8 { animation-delay: 0.4s; }
+
+/* Button hover shine */
+.btn-animated {
+  @apply relative overflow-hidden transition-all duration-300;
+}
+
+.btn-animated::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.btn-animated:hover::after {
+  left: 100%;
+}
+
+.btn-animated:hover {
+  transform: translateY(-2px);
+}
+
+.btn-animated:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Stats card pulse on update */
+@keyframes stat-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.stat-updated {
+  animation: stat-pulse 0.4s ease;
+}
+
+/* Bar swap highlight */
+@keyframes bar-highlight {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
+  70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+.bar-swapping {
+  animation: bar-highlight 0.6s ease;
+}
+
+/* Credits glow */
+@keyframes credits-glow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.credits-text {
+  animation: credits-glow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.credits-text:hover {
+  transform: scale(1.02);
+}
