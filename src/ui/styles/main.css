@@ -6,6 +6,12 @@
   html {
     @apply scroll-smooth;
   }
+  body {
+    @apply bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100;
+    background-image:
+      radial-gradient(circle at 12% 10%, rgba(168, 85, 247, 0.06), transparent 32%),
+      radial-gradient(circle at 90% 85%, rgba(147, 51, 234, 0.05), transparent 36%);
+  }
 }
 
 /* Animated gradient background */
@@ -37,22 +43,36 @@
 .animate-mesh-bg::before {
   top: -20%;
   right: -10%;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.1));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.12));
 }
 
 .animate-mesh-bg::after {
   bottom: -20%;
   left: -10%;
-  background: linear-gradient(315deg, rgba(245, 158, 11, 0.12), rgba(59, 130, 246, 0.1));
+  background: linear-gradient(315deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.08));
   animation-delay: -7s;
 }
 
 .dark .animate-mesh-bg::before {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(16, 185, 129, 0.08));
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
 }
 
 .dark .animate-mesh-bg::after {
-  background: linear-gradient(315deg, rgba(245, 158, 11, 0.08), rgba(59, 130, 246, 0.08));
+  background: linear-gradient(315deg, rgba(168, 85, 247, 0.08), rgba(59, 130, 246, 0.08));
+}
+
+/* Спільний "контейнер-картка" для сторінок лабораторних. */
+.lab-page-shell {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(250, 245, 255, 0.82));
+  border: 1px solid rgba(196, 181, 253, 0.35);
+  border-radius: 1rem;
+  box-shadow: 0 14px 40px rgba(91, 33, 182, 0.08);
+}
+
+.dark .lab-page-shell {
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.82), rgba(39, 23, 68, 0.65));
+  border-color: rgba(147, 51, 234, 0.35);
+  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.45);
 }
 
 /* Stagger delays for children */
