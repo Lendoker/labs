@@ -146,7 +146,7 @@ export const Lab5Page = {
         else if (idx === state.currentI || idx === state.fixedIndex) classes += ' bg-emerald-500 dark:bg-emerald-600 shadow-lg shadow-emerald-500/30';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
 
-        return `<div class="${classes}" style="height: ${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height: ${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 

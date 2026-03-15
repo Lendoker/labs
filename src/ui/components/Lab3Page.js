@@ -151,7 +151,7 @@ export const Lab3Page = {
         if (isComplete) classes += ' bg-sky-400 dark:bg-sky-500 shadow-lg shadow-sky-400/40 ring-1 ring-sky-300 dark:ring-sky-400';
         else if (i === state.comparingWith || i === state.comparingWithNext) classes += ' bg-blue-500 dark:bg-blue-600 ring-2 ring-offset-2 ring-blue-400 shadow-lg shadow-blue-500/30';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
-        return `<div class="${classes}" style="height: ${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height: ${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 

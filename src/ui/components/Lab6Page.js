@@ -150,7 +150,7 @@ export const Lab6Page = {
         else if (idx === state.insertIndex) classes += ' bg-purple-500 dark:bg-purple-600 shadow-lg shadow-purple-500/30';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
 
-        return `<div class="${classes}" style="height: ${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height: ${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 

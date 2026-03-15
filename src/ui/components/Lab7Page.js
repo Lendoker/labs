@@ -140,7 +140,7 @@ export const Lab7Page = {
         else if (idx === state.i) classes += ' bg-blue-500 dark:bg-blue-600';
         else if (idx === state.j) classes += ' bg-purple-500 dark:bg-purple-600';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
-        return `<div class="${classes}" style="height:${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height:${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 

@@ -128,7 +128,7 @@ export const Lab8Page = {
         else if (idx === state.current) classes += ' bg-indigo-500 dark:bg-indigo-600';
         else if (idx === state.leftIdx || idx === state.rightIdx) classes += ' bg-blue-500 dark:bg-blue-600';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
-        return `<div class="${classes}" style="height:${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height:${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 

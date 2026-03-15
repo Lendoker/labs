@@ -154,7 +154,7 @@ export const Lab2Page = {
         else if (i === state.keyIndex) classes += ' bg-amber-500 dark:bg-amber-600 shadow-lg shadow-amber-500/40 ring-2 ring-amber-400 scale-105';
         else if (i === state.comparingWith) classes += ' bg-blue-500 dark:bg-blue-600 ring-2 ring-offset-2 ring-blue-400 shadow-lg shadow-blue-500/30';
         else classes += ' bg-zinc-400 dark:bg-zinc-500';
-        return `<div class="${classes}" style="height: ${h}%" title="${val}"></div>`;
+        return `<div class="${classes} bar-with-value" style="height: ${h}%" title="${val}" data-value="${val}"></div>`;
       }).join('');
     }
 
