@@ -20,6 +20,8 @@ import { Lab3Page } from '../components/Lab3Page.js';
 import { Lab4Page } from '../components/Lab4Page.js';
 import { Lab5Page } from '../components/Lab5Page.js';
 import { Lab6Page } from '../components/Lab6Page.js';
+import { Lab7Page } from '../components/Lab7Page.js';
+import { Lab8Page } from '../components/Lab8Page.js';
 
 /** Реєстр лабораторних: id → { title, component } */
 const LABS = {
@@ -29,6 +31,8 @@ const LABS = {
   lab4: { title: 'Лабораторна робота №4', component: Lab4Page },
   lab5: { title: 'Лабораторна робота №5', component: Lab5Page },
   lab6: { title: 'Лабораторна робота №6', component: Lab6Page },
+  lab7: { title: 'Лабораторна робота №7', component: Lab7Page },
+  lab8: { title: 'Лабораторна робота №8', component: Lab8Page },
 };
 
 let currentLab = 'lab1';
