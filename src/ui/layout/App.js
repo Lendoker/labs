@@ -22,6 +22,9 @@ import { Lab5Page } from '../components/Lab5Page.js';
 import { Lab6Page } from '../components/Lab6Page.js';
 import { Lab7Page } from '../components/Lab7Page.js';
 import { Lab8Page } from '../components/Lab8Page.js';
+import { Lab9Page } from '../components/Lab9Page.js';
+import { Lab10Page } from '../components/Lab10Page.js';
+import { Lab11Page } from '../components/Lab11Page.js';
 
 /** Реєстр лабораторних: id → { title, component } */
 const LABS = {
@@ -33,10 +36,53 @@ const LABS = {
   lab6: { title: 'Лабораторна робота №6', component: Lab6Page },
   lab7: { title: 'Лабораторна робота №7', component: Lab7Page },
   lab8: { title: 'Лабораторна робота №8', component: Lab8Page },
+  lab9: { title: 'Лабораторна робота №9', component: Lab9Page },
+  lab10: { title: 'Лабораторна робота №10', component: Lab10Page },
+  lab11: { title: 'Лабораторна робота №11', component: Lab11Page },
 };
 
-let currentLab = 'lab1';
+const DEFAULT_LAB = 'lab1';
+let currentLab = DEFAULT_LAB;
 let isMobileSidebarOpen = false;
+
+function normalizeLabId(raw) {
+  if (!raw) return null;
+  const cleaned = String(raw).trim().toLowerCase().replace(/^#/, '').replace(/^\//, '');
+  return LABS[cleaned] ? cleaned : null;
+}
+
+function getLabFromLocation() {
+  const fromHash = normalizeLabId(window.location.hash);
+  if (fromHash) return fromHash;
+
+  const fromPath = normalizeLabId(window.location.pathname);
+  if (fromPath) return fromPath;
+
+  const fromQuery = normalizeLabId(new URLSearchParams(window.location.search).get('lab'));
+  if (fromQuery) return fromQuery;
+
+  return null;
+}
+
+function syncUrlWithCurrentLab({ replace = false } = {}) {
+  const targetPath = `/${currentLab}`;
+  if (window.location.pathname !== targetPath) {
+    if (replace) {
+      window.history.replaceState({ lab: currentLab }, '', targetPath);
+    } else {
+      window.history.pushState({ lab: currentLab }, '', targetPath);
+    }
+  }
+}
+
+function applyLocationLab() {
+  const nextLab = getLabFromLocation();
+  if (nextLab && nextLab !== currentLab) {
+    currentLab = nextLab;
+    renderContent();
+    mountSidebar();
+  }
+}
 
 /**
  * Рендерить контент поточної лабораторної в #content.
@@ -67,6 +113,7 @@ function mountSidebar() {
         isMobileSidebarOpen = false;
         renderContent();
         mountSidebar();
+        syncUrlWithCurrentLab();
       }
     },
     onThemeToggle: () => toggleTheme(),
@@ -100,6 +147,7 @@ function updateMobileSidebarState() {
  */
 export function initApp() {
   initTheme();
+  currentLab = getLabFromLocation() ?? DEFAULT_LAB;
   document.getElementById('app').innerHTML = `
     <div class="animate-mesh-bg"></div>
     <header class="lg:hidden sticky top-0 z-20 border-b border-purple-200/70 dark:border-purple-900/60 bg-white/85 dark:bg-zinc-950/85 backdrop-blur-md px-4 py-3">
@@ -125,4 +173,7 @@ export function initApp() {
   updateMobileHeader();
   mountSidebar();
   renderContent();
+  syncUrlWithCurrentLab({ replace: true });
+  window.addEventListener('popstate', applyLocationLab);
+  window.addEventListener('hashchange', applyLocationLab);
 }
