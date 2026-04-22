@@ -1,4 +1,4 @@
-# Лабораторні роботи з алгоритмів (1-11)
+# Лабораторні роботи з алгоритмів (1-17)
 
 Інтерактивний веб-проєкт для вивчення алгоритмів сортування, пошуку та хешування.
 Кожна лабораторна має теоретичний блок, псевдокод, візуалізацію кроків і метрики виконання.
@@ -76,6 +76,45 @@
     - статистика (`size`, `capacity`, `load factor`, `collisions`, `max chain`, `resizes`);
     - порівняння хеш-функцій (`sum`, `djb2`, `polynomial`);
     - автоматичне розширення таблиці.
+
+12. **ЛР12 — Вирішення колізій у хеш-таблицях**  
+    Дві стратегії поряд:
+    - відкрита адресація з квадратичним пробуванням: `index = (h + attempt²) % SIZE`;
+    - метод ланцюжків (separate chaining).
+
+    Хеш-функція — мультиплікативна (`A ≈ 0.618033`).  
+    Аналітика: `open used`, `open collisions`, `chain used`, `chain collisions`, `max chain`.
+
+### Зв'язні списки
+
+13. **ЛР13 — Однозв'язний список**  
+    Операції: `InsertHead`, `InsertTail`, `Remove`, `Search`, `Reverse`, `Count`, `Display`.  
+    Візуалізація: вузли-картки зі стрілками `next` і підсвіткою активного вузла.
+
+14. **ЛР14 — Двозв'язні та кільцеві списки**  
+    - `DoublyLinkedList` з `InsertFront/InsertBack`, `DeleteFirst/DeleteLast`, `Search`, вивід у прямому та зворотньому напрямку;
+    - `CircularList` з `InsertCircularBack`, `Remove` і круговим рендером вузлів.
+
+### Стеки та черги
+
+15. **ЛР15 — Реалізація стеків**  
+    Дві реалізації поряд:
+    - `ArrayStack` (масив фіксованого розміру, `MAX_SIZE = 8`);
+    - `ListStack` (на однозв'язному списку, вершина = голова).
+
+    Операції: `push`, `pop`, `peek`, `isEmpty`, `isFull`, `search`, `sum`, `average`, збереження/завантаження.
+
+16. **ЛР16 — Реалізація черг**  
+    Три реалізації:
+    - `ArrayQueue` — лінійна з `front/rear`;
+    - `CircularArrayQueue` — кільцева на масиві з повторним використанням слотів;
+    - `ListQueue` — на однозв'язному списку з двома вказівниками (`front`, `rear`).
+
+    Операції: `enqueue`, `dequeue`, `peek`, `min`, `max`.
+
+17. **ЛР17 — Черга з пріоритетами та дек**  
+    - `PriorityQueue` на однозв'язному списку, список впорядкований за спаданням пріоритету (операції `pushPriority`, `popPriority`, `top`);
+    - `Deque` (двобічна черга) з операціями `pushFront`, `pushBack`, `popFront`, `popBack`.
 
 ---
 
@@ -155,10 +194,20 @@ labs/
 │   │       ├── linearSearch.js
 │   │       ├── linearSearchBarrier.js
 │   │       ├── binarySearch.js
-│   │       └── hashMapTable.js
+│   │       ├── hashMapTable.js
+│   │       ├── hashCollisions.js
+│   │       ├── singlyLinkedList.js
+│   │       ├── doublyLinkedList.js
+│   │       ├── circularList.js
+│   │       ├── stackArray.js
+│   │       ├── stackList.js
+│   │       ├── queueArray.js
+│   │       ├── queueList.js
+│   │       ├── priorityQueue.js
+│   │       └── deque.js
 │   ├── ui/
 │   │   ├── components/
-│   │   │   ├── Lab1Page.js ... Lab11Page.js
+│   │   │   ├── Lab1Page.js ... Lab17Page.js
 │   │   ├── layout/
 │   │   │   ├── App.js
 │   │   │   └── Sidebar.js
