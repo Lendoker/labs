@@ -37,6 +37,13 @@ import { Lab20Page } from '../components/Lab20Page.js';
 import { Lab21Page } from '../components/Lab21Page.js';
 import { Lab22Page } from '../components/Lab22Page.js';
 import { Lab23Page } from '../components/Lab23Page.js';
+import { Lab24Page } from '../components/Lab24Page.js';
+import { Lab25Page } from '../components/Lab25Page.js';
+import { Lab26Page } from '../components/Lab26Page.js';
+import { Lab27Page } from '../components/Lab27Page.js';
+import { Lab28Page } from '../components/Lab28Page.js';
+import { Lab29Page } from '../components/Lab29Page.js';
+import { Lab30Page } from '../components/Lab30Page.js';
 
 /** Реєстр лабораторних: id → { title, component } */
 const LABS = {
@@ -63,6 +70,13 @@ const LABS = {
   lab21: { title: 'Лабораторна робота №21', component: Lab21Page },
   lab22: { title: 'Лабораторна робота №22', component: Lab22Page },
   lab23: { title: 'Лабораторна робота №23', component: Lab23Page },
+  lab24: { title: 'Лабораторна робота №24', component: Lab24Page },
+  lab25: { title: 'Лабораторна робота №25', component: Lab25Page },
+  lab26: { title: 'Лабораторна робота №26', component: Lab26Page },
+  lab27: { title: 'Лабораторна робота №27', component: Lab27Page },
+  lab28: { title: 'Лабораторна робота №28', component: Lab28Page },
+  lab29: { title: 'Лабораторна робота №29', component: Lab29Page },
+  lab30: { title: 'Лабораторна робота №30', component: Lab30Page },
 };
 
 const DEFAULT_LAB = 'lab1';
