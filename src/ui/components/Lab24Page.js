@@ -4,6 +4,7 @@
  */
 
 import { parseDirectedEdgesText, topologicalSortDfs, topologicalSortKahn } from '../../core/algorithms/graphAdvanced.js';
+import { randomDagEdges, randomCyclicDirectedEdges } from '../../core/algorithms/graphRandom.js';
 import { renderGraphSvg, wireStepPlayback } from './graphViz.js';
 
 const EXAMPLE_EDGES = `0 1
@@ -44,6 +45,8 @@ export const Lab24Page = {
           <textarea id="edges-input" rows="8" class="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 font-mono text-sm">${EXAMPLE_EDGES}</textarea>
           <div class="flex flex-wrap gap-2 items-center">
             <button id="btn-apply" class="btn-animated px-4 py-2 rounded-lg bg-purple-600 text-white">Застосувати</button>
+            <button id="btn-random" class="btn-animated px-4 py-2 rounded-lg bg-indigo-600 text-white">Випадковий DAG (n=8)</button>
+            <button id="btn-random-cycle" class="btn-animated px-4 py-2 rounded-lg bg-rose-600 text-white">Випадковий з циклом</button>
             <label class="text-sm">Алгоритм:</label>
             <select id="algo-mode" class="px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-sm">
               <option value="dfs">DFS (зворотний порядок завершення)</option>
@@ -67,6 +70,11 @@ export const Lab24Page = {
         <section class="space-y-3">
           <h2 class="text-xl font-semibold">Візуалізація</h2>
           <div id="graph-viz" class="overflow-x-auto p-3 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-purple-200 dark:border-purple-900/60"></div>
+        </section>
+
+        <section id="queue-section" class="space-y-3 hidden">
+          <h2 class="text-xl font-semibold">Черга (алгоритм Кана)</h2>
+          <div id="queue-viz" class="flex flex-wrap items-center gap-2 p-4 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-emerald-200 dark:border-emerald-900/60 min-h-[72px]"></div>
         </section>
 
         <section class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -106,15 +114,42 @@ export const Lab24Page = {
     function renderStep(stepIndex) {
       const s = trace.steps[stepIndex] || trace.steps[trace.steps.length - 1];
       const hi = [];
+      const visited = [];
+      const orderLabels = new Array(graph.n).fill(null);
       if (s?.current !== undefined) hi.push(s.current);
       if (s?.neighbour !== undefined) hi.push(s.neighbour);
+      if (mode === 'dfs' && s?.color) {
+        s.color.forEach((c, i) => { if (c === 2) visited.push(i); if (c === 1) hi.push(i); });
+      }
+      if (!trace.hasCycle && s?.order) {
+        s.order.forEach((v, idx) => { orderLabels[v] = idx + 1; });
+      }
       renderGraphSvg(document.getElementById('graph-viz'), {
         n: graph.n,
         directed: true,
         hasEdge: (i, j) => graph.adj[i]?.includes(j),
         highlightNodes: hi,
+        visitedNodes: visited,
         activeEdge: s?.neighbour !== undefined ? { from: s.current, to: s.neighbour } : null,
+        highlightEdges: s?.event === 'cycle' ? [{ from: s.current, to: s.neighbour }] : [],
+        orderLabels: orderLabels,
       });
+
+      const queueSec = document.getElementById('queue-section');
+      const queueEl = document.getElementById('queue-viz');
+      if (mode === 'kahn' && s?.queue) {
+        queueSec.classList.remove('hidden');
+        const q = s.queue;
+        queueEl.innerHTML = q.length
+          ? q.map((v, idx) => `
+            <div class="rounded-lg border-2 px-3 py-2 min-w-[52px] text-center ${idx === 0 ? 'border-purple-400 bg-purple-100/80 dark:bg-purple-900/30' : 'border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900'}">
+              <div class="font-mono text-sm">${v + 1}</div>
+            </div>`).join('<span class="text-zinc-400">→</span>')
+          : '<p class="text-zinc-500">Черга порожня</p>';
+      } else {
+        queueSec.classList.add('hidden');
+      }
+
       const order = trace.hasCycle ? [] : trace.order;
       document.getElementById('t-order').textContent = order.length
         ? order.map((v) => v + 1).join(' → ')
@@ -154,6 +189,26 @@ export const Lab24Page = {
       mode = e.target.value;
       recompute();
       pushLog(`Режим: ${mode === 'kahn' ? 'Кан' : 'DFS'}`);
+    });
+
+    document.getElementById('btn-random').addEventListener('click', () => {
+      playback.stopAuto();
+      const text = randomDagEdges(8);
+      document.getElementById('edges-input').value = text;
+      graph = parseDirectedEdgesText(text);
+      errorEl.classList.add('hidden');
+      recompute();
+      pushLog(`Випадковий DAG: n=${graph.n}, m=${graph.edges.length}`);
+    });
+
+    document.getElementById('btn-random-cycle').addEventListener('click', () => {
+      playback.stopAuto();
+      const text = randomCyclicDirectedEdges(8);
+      document.getElementById('edges-input').value = text;
+      graph = parseDirectedEdgesText(text);
+      errorEl.classList.add('hidden');
+      recompute();
+      pushLog(`Граф з циклом: n=${graph.n}`);
     });
 
     recompute();

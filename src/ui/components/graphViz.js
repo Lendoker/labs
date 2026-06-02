@@ -27,6 +27,11 @@ export function renderGraphSvg(el, opts) {
     activeEdge = null,
     mstEdges = [],
     pathEdges = [],
+    visitedNodes = [],
+    closedNodes = [],
+    openNodes = [],
+    nodeSubLabels = [],
+    orderLabels = [],
   } = opts;
 
   if (!n) {
@@ -39,6 +44,9 @@ export function renderGraphSvg(el, opts) {
   const positions = circleLayout(n, { cx: width / 2, cy: height / 2, radius: Math.min(width, height) / 2 - 40 });
   const directed = directedOpt ?? true;
   const hiSet = new Set(highlightNodes);
+  const visitedSet = new Set(visitedNodes);
+  const closedSet = new Set(closedNodes);
+  const openSet = new Set(openNodes);
   const mstSet = new Set(mstEdges.map((e) => `${Math.min(e.start ?? e.from, e.end ?? e.to)}-${Math.max(e.start ?? e.from, e.end ?? e.to)}`));
   const pathSet = new Set(pathEdges.map((e) => `${e.from}-${e.to}`));
 
@@ -88,11 +96,21 @@ export function renderGraphSvg(el, opts) {
 
   const nodesSvg = positions.map((p, i) => {
     let cls = 'fill-white dark:fill-zinc-900 stroke-purple-500';
+    if (closedSet.has(i)) cls = 'fill-emerald-100 dark:fill-emerald-900/40 stroke-emerald-500';
+    else if (openSet.has(i)) cls = 'fill-indigo-100 dark:fill-indigo-900/40 stroke-indigo-500';
+    else if (visitedSet.has(i)) cls = 'fill-sky-100 dark:fill-sky-900/40 stroke-sky-500';
     if (hiSet.has(i)) cls = 'fill-amber-200 dark:fill-amber-900/60 stroke-amber-500';
+    const sub = nodeSubLabels[i] != null && nodeSubLabels[i] !== ''
+      ? `<text x="${p.x}" y="${p.y + 16}" text-anchor="middle" class="fill-zinc-500 dark:fill-zinc-400 text-[9px] font-mono">${nodeSubLabels[i]}</text>`
+      : '';
+    const ord = orderLabels[i] != null
+      ? `<text x="${p.x + 14}" y="${p.y - 14}" text-anchor="middle" class="fill-amber-700 dark:fill-amber-300 text-[10px] font-mono">#${orderLabels[i]}</text>`
+      : '';
     return `
       <g>
         <circle cx="${p.x}" cy="${p.y}" r="20" class="${cls}" stroke-width="2"></circle>
         <text x="${p.x}" y="${p.y + 4}" text-anchor="middle" class="fill-zinc-800 dark:fill-zinc-100 text-xs font-mono font-semibold">${i + 1}</text>
+        ${sub}${ord}
       </g>`;
   }).join('');
 

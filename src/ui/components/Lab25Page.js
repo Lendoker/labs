@@ -5,6 +5,7 @@
 
 import { parseMatrixText } from '../../core/algorithms/graph.js';
 import { undirectedEdgesFromMatrix, kruskalMst } from '../../core/algorithms/graphAdvanced.js';
+import { randomUndirectedWeightedMatrix, matrixToText } from '../../core/algorithms/graphRandom.js';
 import { renderGraphSvg, wireStepPlayback, matrixHasEdge, matrixEdgeLabel } from './graphViz.js';
 
 const EXAMPLE_MATRIX = `0 9 75 0 0
@@ -31,7 +32,10 @@ export const Lab25Page = {
         <section class="space-y-4">
           <h2 class="text-xl font-semibold">Матриця ваг (0 — немає ребра)</h2>
           <textarea id="matrix-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 font-mono text-sm">${EXAMPLE_MATRIX}</textarea>
-          <button id="btn-apply" class="btn-animated px-4 py-2 rounded-lg bg-purple-600 text-white">Застосувати</button>
+          <div class="flex flex-wrap gap-2">
+            <button id="btn-apply" class="btn-animated px-4 py-2 rounded-lg bg-purple-600 text-white">Застосувати</button>
+            <button id="btn-random" class="btn-animated px-4 py-2 rounded-lg bg-indigo-600 text-white">Випадковий (n=7)</button>
+          </div>
           <p id="error-msg" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
         </section>
         <section class="flex flex-wrap gap-2">
@@ -40,7 +44,10 @@ export const Lab25Page = {
           <button id="btn-auto" class="btn-animated px-4 py-2 rounded-lg bg-emerald-600 text-white">Авто</button>
           <button id="btn-reset" class="btn-animated px-4 py-2 rounded-lg bg-zinc-500 text-white">Скинути</button>
         </section>
-        <section><div id="graph-viz" class="overflow-x-auto p-3 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-purple-200"></div></section>
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold">Візуалізація</h2>
+          <div id="graph-viz" class="overflow-x-auto p-3 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-purple-200"></div>
+        </section>
         <section class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div class="p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800"><div class="text-xs text-zinc-500">Ребра MST</div><div id="t-mst" class="font-mono text-sm">—</div></div>
           <div class="p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800"><div class="text-xs text-zinc-500">Сума ваг</div><div id="t-sum" class="font-mono text-lg">—</div></div>
@@ -68,6 +75,7 @@ export const Lab25Page = {
         hasEdge: (i, j) => matrixHasEdge(matrix, i, j, false),
         edgeLabel: (i, j) => matrixEdgeLabel(matrix, i, j),
         mstEdges: mst.map((e) => ({ start: e.start, end: e.end })),
+        visitedNodes: mst.flatMap((e) => [e.start, e.end]),
         activeEdge: s?.edge ? { from: s.edge.start, to: s.edge.end } : null,
         highlightEdges: s?.rejected && s.edge ? [{ from: s.edge.start, to: s.edge.end }] : [],
       });
@@ -92,6 +100,15 @@ export const Lab25Page = {
         recompute();
         pushLog(`Граф ${matrix.length}×${matrix.length}`);
       } catch (e) { errorEl.textContent = e.message; errorEl.classList.remove('hidden'); }
+    });
+
+    document.getElementById('btn-random').addEventListener('click', () => {
+      playback.stopAuto();
+      matrix = randomUndirectedWeightedMatrix(7);
+      document.getElementById('matrix-input').value = matrixToText(matrix);
+      errorEl.classList.add('hidden');
+      recompute();
+      pushLog(`Випадковий зв’язний граф n=${matrix.length}`);
     });
 
     recompute();

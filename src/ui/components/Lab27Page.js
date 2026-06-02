@@ -5,6 +5,7 @@
 
 import { parseMatrixText } from '../../core/algorithms/graph.js';
 import { dijkstra, reconstructPath, formatDist, INF } from '../../core/algorithms/graphAdvanced.js';
+import { randomUndirectedWeightedMatrix, matrixToText } from '../../core/algorithms/graphRandom.js';
 import { renderGraphSvg, wireStepPlayback, matrixHasEdge, matrixEdgeLabel } from './graphViz.js';
 
 const EXAMPLE_MATRIX = `0 9 75 0 0
@@ -38,6 +39,7 @@ export const Lab27Page = {
             <div><label class="text-sm">Ціль (для шляху)</label><select id="target-v" class="w-full px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900"></select></div>
           </div>
           <button id="btn-apply" class="btn-animated px-4 py-2 rounded-lg bg-purple-600 text-white">Застосувати</button>
+          <button id="btn-random" class="btn-animated px-4 py-2 rounded-lg bg-indigo-600 text-white">Випадковий (n=7)</button>
           <p id="error-msg" class="text-red-600 dark:text-red-400 text-sm hidden"></p>
         </section>
         <section class="flex flex-wrap gap-2">
@@ -46,7 +48,10 @@ export const Lab27Page = {
           <button id="btn-auto" class="btn-animated px-4 py-2 rounded-lg bg-emerald-600 text-white">Авто</button>
           <button id="btn-reset" class="btn-animated px-4 py-2 rounded-lg bg-zinc-500 text-white">Скинути</button>
         </section>
-        <section><div id="graph-viz" class="overflow-x-auto p-3 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-purple-200"></div></section>
+        <section class="space-y-3">
+          <h2 class="text-xl font-semibold">Візуалізація</h2>
+          <div id="graph-viz" class="overflow-x-auto p-3 bg-zinc-100/80 dark:bg-zinc-800/50 rounded-xl border-2 border-dashed border-purple-200"></div>
+        </section>
         <section class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div class="p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800"><div class="text-xs text-zinc-500">Відстані від старту</div><div id="t-dist" class="font-mono text-xs break-all">—</div></div>
           <div class="p-3 rounded-xl bg-zinc-100 dark:bg-zinc-800"><div class="text-xs text-zinc-500">Шлях до цілі</div><div id="t-path" class="font-mono text-sm">—</div></div>
@@ -92,14 +97,18 @@ export const Lab27Page = {
       const dist = s?.distance || trace.distance;
       const parent = s?.parent || trace.parent;
       const { path, edges } = pathEdges(parent, target);
+      const visited = (s?.visited || []).map((v, i) => (v ? i : null)).filter((x) => x !== null);
+      const nodeSubLabels = dist.map((d) => formatDist(d));
       renderGraphSvg(document.getElementById('graph-viz'), {
         n: matrix.length,
         directed: false,
         hasEdge: (i, j) => matrixHasEdge(matrix, i, j, false),
         edgeLabel: (i, j) => matrixEdgeLabel(matrix, i, j),
         pathEdges: edges,
-        highlightNodes: [start, ...(s?.current !== undefined ? [s.current] : [])],
+        highlightNodes: [start, target, ...(s?.current !== undefined ? [s.current] : [])],
+        visitedNodes: visited,
         activeEdge: s?.neighbour !== undefined ? { from: s.current, to: s.neighbour } : null,
+        nodeSubLabels,
       });
       document.getElementById('t-dist').textContent = dist.map((d, idx) => `${idx + 1}:${formatDist(d)}`).join('  ');
       document.getElementById('t-path').textContent = dist[target] === INF
@@ -133,6 +142,18 @@ export const Lab27Page = {
 
     document.getElementById('start-v').addEventListener('change', (e) => { start = Number(e.target.value); recompute(); });
     document.getElementById('target-v').addEventListener('change', (e) => { target = Number(e.target.value); playback.render(); });
+
+    document.getElementById('btn-random').addEventListener('click', () => {
+      playback.stopAuto();
+      matrix = randomUndirectedWeightedMatrix(7);
+      document.getElementById('matrix-input').value = matrixToText(matrix);
+      start = 0;
+      target = matrix.length - 1;
+      errorEl.classList.add('hidden');
+      rebuildSelects();
+      recompute();
+      pushLog(`Випадковий граф n=${matrix.length}, старт=1, ціль=${target + 1}`);
+    });
 
     rebuildSelects();
     recompute();
